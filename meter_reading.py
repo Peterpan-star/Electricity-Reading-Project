@@ -68,4 +68,4 @@ def meter_reading():
         return jsonify({"status": "success", "message": f"We have received: {meter_id}, {user_id}, from{starttime} to {endtime}, {reading}"}), 201
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='localhost', port=5001, debug=False)

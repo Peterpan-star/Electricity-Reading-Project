@@ -267,7 +267,7 @@ def modify_user_post(meter_no):
 def delete_user():
     if request.method == 'GET':
         return render_template_string("""
-        <h2>Delete User</h2>
+        <h2>Delete User Information</h2>
         <form action="/delete_user" method="post">
             <label for="meter_no">Meter Number (e.g. 123-456-789):</label>
             <input type="text" name="meter_no" required><br><br>
@@ -277,9 +277,19 @@ def delete_user():
 
     if request.method == 'POST':
         meter_no = request.form['meter_no']
-        global users
-        users = [u for u in users if u['meter_no'] != meter_no]
-        return redirect(url_for('dashboard'))
+        user = next((u for u in users if u['meter_no'] == meter_no), None)
+        if user:
+            # Set specific fields to None or empty value to "delete" them
+            user["username"] = None
+            user["email"] = None
+            user["tel"] = None  
+            return render_template_string("""
+            <h2>User Information Updated Successfully</h2>
+            <p><a href="/dashboard">Go back to Dashboard</a></p>
+            """)
+        else:
+            return "User not found."
+
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=False)
